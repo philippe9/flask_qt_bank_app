@@ -1,0 +1,41 @@
+{% extends "layout.html" %}  {% block
+  body %} {{ super() }}
+<body class="vh-100 container">
+  <div class="menu d-flex flex-column justify-content-between align-items-center pt-5 pb-5">
+      <h1 class="m-0">Listing des transactions</h1>
+      <div class="actions mt-3">
+          <a href="/list_users_page" type="button" class="btn btn-success">Lister les utilisateurs</a>
+          <a href="/transaction_page" type="button" class="btn btn-success">Effectuer une transaction</a>
+          <a href="/logout" type="button" class="btn btn-danger">Logout</a>
+      </div>
+  </div>
+  <table class="table table-bordered table-striped">
+      <thead>
+          <tr>
+              <th scope="col">Montant</th>
+              <th scope="col">Type</th>
+              <th scope="col">Compte emmeteur</th>
+              <th scope="col">Compte recepteur</th>
+              <th scope="col">Date de l'operation</th>
+              <th scope="col">Mat operation</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for item in trxs %}
+
+              <tr>
+                  <th scope="row">{{item.montant}} XOF</th>
+                  <td>{{item.type}}</td>
+                  <td>{{item.compte_emmeteur_obj.prenom}} {{item.compte_emmeteur_obj.nom}}</td>
+                  <td>{{item.compte_recepteur_obj.prenom}} {{item.compte_recepteur_obj.nom}}</td>
+                  <td>{{item.date.strftime('%a %d/%m/%Y , %H:%M:%S')}}</td>
+                  <td>{{item.matricule_transaction}}</td>
+              </tr>
+
+              {% endfor %}
+      </tbody>
+  </table>
+
+</body>
+{% endblock %}
+

@@ -1,0 +1,44 @@
+{% extends "layout.html" %} {% block page_title %}Transaction{% endblock %} {% block
+body %} {{ super() }}
+<body
+  class="d-flex flex-column justify-content-start align-items-center vh-100 mt-5"
+>
+  <div class="card">
+    <div class="card-header text-center">
+      <h5>Remplissez le formulaire ci dessous</h5>
+    </div>
+    <form action="/do_transaction_form" class="p-4" method="post">
+      <div class="form-group">
+        <label for="compte_emmeteur">Client a crediter</label>
+        <select class="form-control" id="compte_emmeteur" name="compte_emmeteur">
+            {% for user in users %}
+            <option value="{{user.num_compte}}">{{user.prenom}} {{user.nom}} - {{user.solde}} XOF</option>
+             {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="compte_recepteur">Client a debiter</label>
+        <select class="form-control" id="compte_recepteur" name="compte_recepteur">
+            {% for user in users %}
+          <option value="{{user.num_compte}}">{{user.prenom}} {{user.nom}} - {{user.solde}} XOF</option>
+           {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="amount">Montant a transferer</label>
+        <input
+          type="number"
+          name="amount"
+          class="form-control"
+          id="amount"
+          placeholder="Montant"
+        />
+      </div>
+      <button type="submit" class="btn btn-primary w-100 mt-4">
+        Transferer
+      </button>
+    </form>
+  </div>
+</body>
+
+{% endblock %}

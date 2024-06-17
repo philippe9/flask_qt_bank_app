@@ -1,0 +1,39 @@
+{% extends "layout.html" %}  {% block
+    body %} {{ super() }}
+<body class="vh-100 container">
+    <div class="menu d-flex flex-column justify-content-between align-items-center pt-5 pb-5">
+        <h1 class="m-0">List de clients</h1>
+        <div class="actions mt-3">
+            <a href="/transaction_page" type="button" class="btn btn-success">Effectuer une transaction</a>
+            <a href="/list_transaction_page" type="button" class="btn btn-success">Lister les transactions</a>
+            <a href="/logout" type="button" class="btn btn-danger">Logout</a>
+        </div>
+    </div>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nom</th>
+                <th scope="col">Prenom</th>
+                <th scope="col">Numero de compte</th>
+                <th scope="col">Solde</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+
+                <tr>
+                    <th scope="row">{{user.id_client}}</th>
+                    <td>{{user.nom}}</td>
+                    <td>{{user.prenom}}</td>
+                    <td>{{user.num_compte}}</td>
+                    <td>{{user.solde}} XOF</td>
+                </tr>
+
+                {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+{% endblock %}
+
