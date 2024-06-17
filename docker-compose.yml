@@ -1,0 +1,72 @@
+# This file is used to run multi-containers in one go to avoid implementing them seperately with just one command.
+# Every container needs to have their own dockerfile
+# Add the commands for each Dockerfile individually.
+# Once the 'up' command is run, it will run all the containers as per their config.
+
+services:
+  # Define our individual services
+
+  flask:
+
+    # Build the flask service using the Dockerfile in the flask directory
+    build: ./flask
+
+    # Give our flask container a friendly name
+    container_name: flask
+
+    # Instruct Docker to always restart the service
+    # restart: always
+
+    # Use environment to set any environment variables (Pass DB username, uris, ...., etc)
+    environment:
+      - APP_NAME=MyFlaskApp
+
+    # Any ports listed using `expose` will only be accessible to internal network for other internal services
+    # uWSGI will be serving our Flask application on port 8080
+    expose:
+      - 8080
+    depends_on:
+      - bankdb
+    # Mount the container log directory to the local log directory
+    # Consider changing this to /var/log/uwsgi:/var/uwsgi in production
+    # Just make sure the directory exists before running docker-compose
+    # volumes:
+    #   - ./log/uwsgi:/var/log/uwsgi
+
+  bankdb:
+      build: ./mysql
+      restart: always
+      container_name: bankdb
+  #    restart: unless-stopped
+      volumes:
+        - ./db/mysql:/var/lib/mysql
+        - ./mysql/dump.sql:/docker-entrypoint-initdb.d/dump.sql
+      command: bash -c "sleep 50 && mysql -udbuser -puserpass < /docker-entrypoint-initdb.d/dump.sql"
+      ports:
+        - 5432:5432
+        - 3306:3306
+      environment:
+        - MYSQL_ROOT_PASSWORD=mysql-pw
+        - MYSQL_DATABASE=banque
+        - MYSQL_USER=dbuser
+        - MYSQL_PASSWORD=userpass
+  nginx:
+
+    # Build the nginx service using the Dockerfile in the nginx directory
+    build: ./nginx
+
+    # Give our nginx container a friendly name
+    container_name: nginx
+
+    # Instruct Docker to always restart the service
+    restart: always
+
+    # Any ports listed using `ports` will exposed to the outside world (i.e, HOST: CONTAINER)
+    ports:
+      - "80:80"
+    
+    # Mount the container log directory to the local log directory
+    # Consider changing this to /var/log/uwsgi:/var/uwsgi in production
+    # Just make sure the directory exists before running docker-compose
+    volumes:
+      - ./log/uwsgi:/var/log/uwsgi
